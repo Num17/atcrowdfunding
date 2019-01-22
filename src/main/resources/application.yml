@@ -1,0 +1,19 @@
+server:
+  servlet:
+    context-path: /atcrowdfunding
+  port: 80
+
+spring:
+  #springmvc
+  mvc:
+    view:
+      prefix: /
+      suffix: .html
+
+#库配置
+database:
+  atcrowdfunding:
+    driver: com.mysql.jdbc.Driver
+    username: root
+    password: ZGZGroup_1024
+    url: jdbc:mysql://localhost:3306/atcrowdfunding?useSSL=false
