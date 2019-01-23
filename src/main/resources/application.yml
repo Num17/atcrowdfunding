@@ -3,13 +3,6 @@ server:
     context-path: /atcrowdfunding
   port: 80
 
-spring:
-  #springmvc
-  mvc:
-    view:
-      prefix: /
-      suffix: .html
-
 #库配置
 database:
   atcrowdfunding:

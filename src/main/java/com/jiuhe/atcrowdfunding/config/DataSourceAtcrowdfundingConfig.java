@@ -27,9 +27,9 @@ public class DataSourceAtcrowdfundingConfig {
     static final String SQL_SESSION_FACTORY = "sqlSessionFactoryAtcrowdfunding";
 
     private static final Logger logger = LoggerFactory.getLogger(DataSourceAtcrowdfundingConfig.class);
-    private static final String DATA_SOURCE_PROPERTY = "dataSourcePropertyEarlyAutumn";
+    private static final String DATA_SOURCE_PROPERTY = "dataSourcePropertyAtcrowdfunding";
     private static final String MYBATIS_CONFIG = "classpath:mybatis/mybatis-config.xml";
-    private static final String MYBATIS_MAPPERS = "classpath:com/jiuhe/atcrowdfunding/dao/earlyautumn/mappers/*.xml";
+    private static final String MYBATIS_MAPPERS = "classpath:com/jiuhe/atcrowdfunding/dao/mapper/*.xml";
     private static final String TX_MANAGER = "txManagerAtcrowdfundingn";
 
     @Primary
@@ -50,7 +50,7 @@ public class DataSourceAtcrowdfundingConfig {
     }
 
     @Bean(name = SQL_SESSION_FACTORY)
-    public SqlSessionFactory sqlSessionFactoryTest(@Qualifier(DATA_SOURCE_PROPERTY) DataSource dataSource) {
+    public SqlSessionFactory sqlSessionFactory(@Qualifier(DATA_SOURCE_PROPERTY) DataSource dataSource) {
         try {
             SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
             sqlSessionFactoryBean.setDataSource(dataSource);
