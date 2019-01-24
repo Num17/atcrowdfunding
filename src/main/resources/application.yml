@@ -8,5 +8,5 @@ database:
   atcrowdfunding:
     driver: com.mysql.jdbc.Driver
     username: root
-    password: ZGZGroup_1024
+    password: 123
     url: jdbc:mysql://localhost:3306/atcrowdfunding?useSSL=false
