@@ -25,4 +25,15 @@
         id = #{id,jdbcType=INTEGER}
     </select>
 
+    <select id="querByUserNameAndPassword" resultType="int">
+      select
+        count(id)
+      from
+        <include refid="Base_Table"/>
+      where
+        username = #{username,jdbcType=VARCHAR}
+      and
+        password = #{password,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

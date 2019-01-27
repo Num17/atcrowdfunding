@@ -16,6 +16,16 @@ public class UserServiceImpl implements UserService {
         return userMapper.queryById(id);
     }
 
+    @Override
+    public int login(String username, String password) {
+        return userMapper.querByUserNameAndPassword(username, password);
+    }
+
+//    @Override
+//    public String getUserInfo(String username) {
+//        return userMapper;
+//    }
+
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         this.userMapper = userMapper;

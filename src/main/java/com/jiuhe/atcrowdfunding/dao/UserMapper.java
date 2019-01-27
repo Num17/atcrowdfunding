@@ -9,4 +9,6 @@ public interface UserMapper {
 
     User queryById(int id);
 
+    int querByUserNameAndPassword(String username, String password);
+
 }

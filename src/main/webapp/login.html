@@ -60,41 +60,45 @@
 </div>
 <script src="jquery/jquery-2.1.1.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="common.js"></script>
+<script src="layer/layer.js"></script>
 <script>
     //登录
     function login() {
         //非空校验
         if (isEmpty($("#username").val())) {
-            alert("请输入用户名!");
+            layer.msg("请输入用户名!", {time: 1500, icon: 5, shift: 6});
             return;
         }
 
         if (isEmpty($("#password").val())) {
-            alert("请输入密码!");
+            layer.msg("请输入用密码!", {time: 1500, icon: 5, shift: 6});
             return;
         }
+
+        var loading = null;
 
         $.ajax({
             url: "/atcrowdfunding/user/login",
             type: "post",
             data: $("#login_form").serialize(),
+            beforeSend: function () {
+                loading = layer.msg("加载中......", {icon: 16});
+            },
             success: function (data) {
-                alert(data.statusCode);
+                layer.close(loading);
+                if (data.statusCode == 0) {
+                    layer.msg("登录失败，请输入正确的用户名和密码!", {time: 1500, icon: 5, shift: 6});
+                }
+
+                if (data.statusCode == 1) {
+                    window.location.href = "/atcrowdfunding/main.html";
+                }
             }
         })
 
     }
 
-    function isEmpty(str) {
-        return str == "";
-    }
-
-    //
-    // function trim(str){
-    //
-    //
-    //
-    // }
 </script>
 </body>
 </html>
