@@ -1,6 +1,8 @@
 package com.jiuhe.atcrowdfunding.controller;
 
 import com.jiuhe.atcrowdfunding.bean.BaseResponse;
+import com.jiuhe.atcrowdfunding.bean.Page;
+import com.jiuhe.atcrowdfunding.domain.User;
 import com.jiuhe.atcrowdfunding.service.UserService;
 import com.jiuhe.atcrowdfunding.util.StringUtil;
 import org.slf4j.Logger;
@@ -8,10 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -20,6 +24,36 @@ public class UserController {
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private UserService userService;
+
+    @RequestMapping("/query-page")
+    public BaseResponse queryPage(@RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
+
+        if (pageNumber == null || pageNumber < 0) {
+            pageNumber = 0;
+        }
+
+        if (pageSize == null || pageSize <= 0) {
+            pageSize = 10;
+        }
+
+        List<User> users = userService.getPage(pageNumber, pageSize);
+        int count = userService.getCount(pageSize);
+
+        int pageCount = count / pageSize;
+        if (count % pageSize > 0) {
+            pageCount += 1;
+        }
+
+        //TODO 分页待优化
+        Page<User> page = new Page<>();
+        page.setCount(count);
+        page.setData(users);
+        page.setPageNumber(pageNumber);
+        page.setPageSize(pageSize);
+        page.setPageCount(pageCount);
+
+        return BaseResponse.newSuccessResponse().put("page", page);
+    }
 
     @RequestMapping("/logout")
     public BaseResponse logout(HttpSession session) {

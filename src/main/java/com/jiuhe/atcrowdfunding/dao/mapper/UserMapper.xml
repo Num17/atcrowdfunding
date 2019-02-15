@@ -4,17 +4,49 @@
 
     <resultMap id="BaseResultMap" type="com.jiuhe.atcrowdfunding.domain.User">
         <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="is_deleted" property="isDeleted" jdbcType="BOOLEAN"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
       id,
-      username
+      account,
+      username,
+      password,
+      email,
+      is_deleted,
+      create_time
     </sql>
 
     <sql id="Base_Table">
         t_user
     </sql>
+
+    <select id="queryCount" resultType="int">
+        select
+          count(id)
+        from
+          <include refid="Base_Table"/>
+        where
+          is_deleted = 0
+    </select>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+        select
+          account,
+          username,
+          email
+        from
+          <include refid="Base_Table"/>
+        order by
+          id
+        desc
+        limit
+          #{start,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
 
     <select id="queryById" parameterType="int" resultMap="BaseResultMap">
       select
