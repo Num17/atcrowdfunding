@@ -32,7 +32,7 @@
             <li style="padding-top:8px;">
 				<div class="btn-group">
 				  <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
-					<i class="glyphicon glyphicon-user"></i> 张三 <span class="caret"></span>
+					<i class="glyphicon glyphicon-user"></i> <span>张三</span> <span class="caret"></span>
 				  </button>
 					  <ul class="dropdown-menu" role="menu">
 						<li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
@@ -172,13 +172,13 @@
 			     <tr>
 				     <td colspan="6" align="center">
 						<ul class="pagination">
-                            <li class="disabled"><a href="#">上一页</a></li>
-                            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li><a href="#">下一页</a></li>
+                            <!--<li class="disabled"><a href="#">上一页</a></li>-->
+                            <!--<li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>-->
+                            <!--<li><a href="#">2</a></li>-->
+                            <!--<li><a href="#">3</a></li>-->
+                            <!--<li><a href="#">4</a></li>-->
+                            <!--<li><a href="#">5</a></li>-->
+                            <!--<li><a href="#">下一页</a></li>-->
                         </ul>
 					 </td>
 				 </tr>
@@ -216,44 +216,184 @@
                     window.location.href = "edit.html";
                 });
 
+                var ulNode = $(".pagination");
+                // $(ulNode).on("click", "li:first", function () {
+                //     var activeIndex = parseInt($(this).next(".active").find("a").text());
+                //     var index = activeIndex - 1;
+                //     if(activeIndex === 1){
+                //         index = activeIndex;
+                //     }
+                //
+                //     var hasClass = $(this).hasClass(".disabled");
+                //     console.log(hasClass);
+                //     console.log(typeof hasClass);
+                //     if (!hasClass){
+                //         initList(index, 10);
+                //     } else{
+                //         $(this).unbind("click");
+					// }
+                //
+                // });
+                //
+                // $(ulNode).on("click", "li:last", function () {
+                //
+                //     var activeIndex = parseInt($(this).prev(".active").find("a").text());
+                //     var pageCount = parseInt($(this).prev());
+                //
+                //     var index = activeIndex + 1;
+                //     if(activeIndex === pageCount){
+                //         index = pageCount;
+                //     }
+                //
+                //     var hasClass = $(this).hasClass(".disabled");
+                //     console.log(hasClass);
+                //     console.log(typeof hasClass);
+                //     if (!hasClass){
+                //         // $(this).unbind("click");
+                //         initList(index, 10);
+                //     }
+                //
+                // });
+
+                $(ulNode).on("click", "li[class != 'disabled']", function () {
+                    var pageIndex = $(this).text();
+
+                    var index = parseInt(pageIndex);
+
+                    if(isNaN(index)){
+                        var nextActive = $(this).next(".active").text();
+                        var prevActive = $(this).prev(".active").text();
+                        var nextActiveIndex = parseInt(nextActive);
+                       	var prevActiveIndex = parseInt(prevActive);
+						
+						console.log(nextActive);
+						console.log(prevActive);
+						console.log(nextActiveIndex);
+						console.log(prevActiveIndex);
+						
+
+						// if(!isNaN(nextActiveIndex)){
+                         //    initList(nextActiveIndex - 1, 10);
+						// } else{
+                         //    initList(prevActiveIndex - 1, 10);
+						// }
+
+					} else {
+						initList(index, 10);
+					}
+
+                });
+
 			    init();
             });
 
             function init(){
+
+                initUserInfo();
+                initList(1, 10);
+
+			}
+
+			function initList(pageNumber, pageSize){
+                clearData();
+
                 $.ajax({
-					url: "/atcrowdfunding/user/query-page",
+                    url: "/atcrowdfunding/user/query-page",
                     type: "post",
-                    data: {pageNumber: 1, pageSize: 10},
+                    data: {pageNumber: pageNumber, pageSize: pageSize},
                     success: function (data) {
-					    var users = data.data.page.data;
+                        var users = data.data.page.data;
+
+                        var td = "<td></td>";
+                        var tr = "<tr></tr>";
+                        var button = "<button type='button'></button>";
+						var input = "<input type='checkbox'>";
+						var iStr = "<i></i>";
+
                         for (var i = 0; i < users.length; i++) {
-					        var trNode = $("<tr></tr>");
-							var checkBoxNode = $("<td><input type='checkbox'></td>");
-							var tdNode1 = $("<td></td>");
-                            var tdNode2 = $("<td></td>");
-                            var tdNode3= $("<td></td>");
-                            var tdNode4= $("<td></td>");
-                            var tdNode5= $("<td></td>");
-							var btnNode1 = $("<button type='button' class='btn btn-success btn-xs'><i class=' glyphicon glyphicon-check'></i></button>");
-							var btnNode2 = $("<button type='button' class='btn btn-primary btn-xs'><i class=' glyphicon glyphicon-pencil'></i></button>");
-							var btnNode3 = $("<button type='button' class='btn btn-danger btn-xs'><i class=' glyphicon glyphicon-remove'></i></button>");
+                            var trNode = $(tr);
+                            var checkBoxNode = $(td).append(input);
 
-                            $(trNode).append($(tdNode1).text(i + 1));
+                            $(trNode).append($(td).text(i + 1));
                             $(trNode).append($(checkBoxNode));
-                            $(trNode).append($(tdNode2).text(users[i].account));
-                            $(trNode).append($(tdNode3).text(users[i].username));
-                            $(trNode).append($(tdNode4).text(users[i].email));
+                            $(trNode).append($(td).text(users[i].account));
+                            $(trNode).append($(td).text(users[i].username));
+                            $(trNode).append($(td).text(users[i].email));
 
-                            $(tdNode5).append($(btnNode1));
-                            $(tdNode5).append($(btnNode2));
-                            $(tdNode5).append($(btnNode3));
-                            $(trNode).append($(tdNode5));
+                            var roleBtn = $(button).addClass("btn btn-success btn-xs").append($(iStr).addClass(" glyphicon glyphicon-check"));
+                            var editBtn = $(button).addClass("btn btn-primary btn-xs").append($(iStr)).addClass(" glyphicon glyphicon-pencil");
+                            var removeBtn = $(button).addClass("btn btn-danger btn-xs").append($(iStr)).addClass(" glyphicon glyphicon-remove");
+
+                            var btnTdNode = $(td);
+                            $(btnTdNode).append($(roleBtn));
+                            $(btnTdNode).append($(editBtn));
+                            $(btnTdNode).append($(removeBtn));
+                            $(trNode).append($(btnTdNode));
 
                             $(trNode).appendTo($("tbody"));
                         }
-					}
-				});
+
+                        var pageCount = data.data.page.pageCount;
+
+                        var a = "<a href='javascript:void(0);'></a>";
+                        var li = "<li></li>";
+                        var span = "<span></span>";
+
+                        var prevLiNode = $(li).append($(a).text("上一页"));
+                        var nextLiNode = $(li).append($(a).text("下一页"));
+
+                        pageNumber = parseInt(pageNumber);
+                        pageCount = parseInt(pageCount);
+                        if(pageNumber === 1){
+                            $(prevLiNode).addClass("disabled");
+                        }
+
+                        if(pageNumber === pageCount){
+                            $(nextLiNode).addClass("disabled");
+                        }
+
+                        var paginationNode = $(".pagination");
+                        $(prevLiNode).appendTo($(paginationNode));
+                        for (var j = 0; j< pageCount; j++){
+                            var index = j + 1;
+                            var aNode = $(a);
+							var liNode = $(li).append($(aNode).text(index));
+                            if(index === pageNumber){
+                            	$(liNode).addClass("active");
+                            	$(span).addClass("sr-only").text("(current)").appendTo($(aNode));
+                            }
+
+                            $(liNode).appendTo($(paginationNode));
+                        }
+
+                        $(nextLiNode).appendTo($(paginationNode));
+                    }
+                });
 			}
+
+            //初始化右上角登录名
+            function initUserInfo() {
+                $.ajax({
+                    url: "/atcrowdfunding/user/info",
+                    type: "post",
+                    data: {},
+                    success: function (data) {
+                        if (data.statusCode === 0) {
+                            layer.msg("系统错误，请稍后再试!", {time: 1500, icon: 5, shift: 6});
+                        }
+
+                        if (data.statusCode === 1) {
+
+                            $("button:first span:first").text(data.data.username);
+                        }
+                    }
+                });
+            }
+
+            function clearData(){
+                $("tbody").empty();
+                $(".pagination").empty();
+            }
         </script>
   </body>
 </html>
