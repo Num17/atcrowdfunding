@@ -1,69 +1,24 @@
 package com.jiuhe.atcrowdfunding.bean;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.List;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class Page<T> {
 
     public static final Page EMPTY = null;
 
-    private Integer pageNumber;
-    private Integer pageSize;
+//    private Integer offset;
+//    private Integer limit;
 
-    private int count;
-    private int pageCount;
-    private List<T> data;
+    private int total;
+    private List<T> rows;
 
-    public Page() {
-    }
-
-    public Integer getPageNumber() {
-        return pageNumber;
-    }
-
-    public void setPageNumber(Integer pageNumber) {
-        this.pageNumber = pageNumber;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getPageCount() {
-        return pageCount;
-    }
-
-    public void setPageCount(int pageCount) {
-        this.pageCount = pageCount;
-    }
-
-    public List<T> getData() {
-        return data;
-    }
-
-    public void setData(List<T> data) {
-        this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "Page{" +
-                "pageNumber=" + pageNumber +
-                ", pageSize=" + pageSize +
-                ", count=" + count +
-                ", pageCount=" + pageCount +
-                ", data=" + data +
-                '}';
-    }
 }

@@ -13,8 +13,10 @@ public interface UserMapper {
 
     int querByUserNameAndPassword(String username, String password);
 
-    List<User> queryPage(Integer start, Integer pageSize);
+    List<User> queryPage(Integer offset, Integer limit, String query);
 
     int queryCount();
+
+    int deleteUser(String account);
 
 }

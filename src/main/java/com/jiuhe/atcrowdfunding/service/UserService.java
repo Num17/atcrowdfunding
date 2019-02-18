@@ -1,5 +1,6 @@
 package com.jiuhe.atcrowdfunding.service;
 
+import com.jiuhe.atcrowdfunding.bean.Page;
 import com.jiuhe.atcrowdfunding.domain.User;
 
 import java.util.List;
@@ -10,9 +11,11 @@ public interface UserService {
 
     int login(String username, String password);
 
-    List<User> getPage(Integer pageNumber, Integer pageSize);
+    Page<User> getPage(Integer offset, Integer limit, String query);
 
     int getCount(int pageSize);
+
+    int removeUser(String account);
 
 //    String getUserInfo(String username);
 }

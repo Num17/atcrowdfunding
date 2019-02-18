@@ -8,10 +8,7 @@ import com.jiuhe.atcrowdfunding.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
@@ -25,34 +22,33 @@ public class UserController {
 
     private UserService userService;
 
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public BaseResponse deleteUser(@RequestParam("account") String account) {
+
+        if (StringUtil.isEmpty(account)) {
+            return BaseResponse.newErrorResponse();
+        }
+
+        userService.removeUser(account);
+
+        return BaseResponse.newSuccessResponse();
+    }
+
     @RequestMapping("/query-page")
-    public BaseResponse queryPage(@RequestParam("pageNumber") Integer pageNumber, @RequestParam("pageSize") Integer pageSize) {
+    public Page<User> queryPage(
+            @RequestParam("offset") Integer offset,
+            @RequestParam("limit") Integer limit,
+            @RequestParam("query") String query) {
 
-        if (pageNumber == null || pageNumber < 0) {
-            pageNumber = 0;
+        if (offset == null || offset < 0) {
+            offset = 0;
         }
 
-        if (pageSize == null || pageSize <= 0) {
-            pageSize = 10;
+        if (limit == null || limit <= 0) {
+            limit = 10;
         }
 
-        List<User> users = userService.getPage(pageNumber, pageSize);
-        int count = userService.getCount(pageSize);
-
-        int pageCount = count / pageSize;
-        if (count % pageSize > 0) {
-            pageCount += 1;
-        }
-
-        //TODO 分页待优化
-        Page<User> page = new Page<>();
-        page.setCount(count);
-        page.setData(users);
-        page.setPageNumber(pageNumber);
-        page.setPageSize(pageSize);
-        page.setPageCount(pageCount);
-
-        return BaseResponse.newSuccessResponse().put("page", page);
+        return userService.getPage(offset, limit, query);
     }
 
     @RequestMapping("/logout")

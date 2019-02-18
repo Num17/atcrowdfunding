@@ -24,6 +24,14 @@
     <sql id="Base_Table">
         t_user
     </sql>
+    <delete id="deleteUser" parameterType="string">
+        update
+          <include refid="Base_Table"/>
+        set
+          is_deleted = 1
+        where
+          account = #{account,jdbcType=VARCHAR}
+    </delete>
 
     <select id="queryCount" resultType="int">
         select
@@ -41,11 +49,21 @@
           email
         from
           <include refid="Base_Table"/>
+        where
+          is_deleted = 0
+        <if test="query != null and query.length() != 0">
+            and
+              account
+            like #{query,jdbcType=VARCHAR}
+            or
+              username
+            like #{query,jdbcType=VARCHAR}
+        </if>
         order by
           id
         desc
         limit
-          #{start,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+          #{offset,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
     </select>
 
     <select id="queryById" parameterType="int" resultMap="BaseResultMap">

@@ -10,13 +10,17 @@
 	<link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../css/font-awesome.min.css">
 	<link rel="stylesheet" href="../css/main.css">
+	<link href="../bootstrap-table/dist/bootstrap-table.css" rel="stylesheet" />
+	<script src="../jquery/jquery-2.1.1.min.js"></script>
+	<script src="../bootstrap-table/dist/bootstrap-table.js"></script>
+	<script src="../bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
 	<style>
-	.tree li {
-        list-style-type: none;
-		cursor:pointer;
-	}
-	table tbody tr:nth-child(odd){background:#F4F4F4;}
-	table tbody td:nth-child(even){color:#C00;}
+		.tree li {
+			list-style-type: none;
+			cursor:pointer;
+		}
+		table tbody tr:nth-child(odd){background:#F4F4F4;}
+		table tbody td:nth-child(even){color:#C00;}
 	</style>
   </head>
 
@@ -123,277 +127,143 @@
 				</ul>
 			</div>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-sm-14 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 			<div class="panel panel-default">
 			  <div class="panel-heading">
-				<h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+				<h3 class="panel-title"><i class="glyphicon glyphicon-th"></i>数据列表</h3>
 			  </div>
 			  <div class="panel-body">
-<form class="form-inline" role="form" style="float:left;">
-  <div class="form-group has-feedback">
-    <div class="input-group">
-      <div class="input-group-addon">查询条件</div>
-      <input class="form-control has-success" type="text" placeholder="请输入查询条件">
-    </div>
-  </div>
-  <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
-</form>
-<button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
-<button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
-<br>
- <hr style="clear:both;">
-          <div class="table-responsive">
-            <table class="table table-bordered">
-              <thead>
-                <tr >
-                  <th width="30">#</th>
-				  <th width="30"><input type="checkbox"></th>
-                  <th>账号</th>
-                  <th>名称</th>
-                  <th>邮箱地址</th>
-                  <th width="100">操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!--<tr>-->
-                  <!--<td>1</td>-->
-				  <!--<td><input type="checkbox"></td>-->
-                  <!--<td>Lorem</td>-->
-                  <!--<td>ipsum</td>-->
-                  <!--<td>dolor</td>-->
-                  <!--<td>-->
-				      <!--<button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>-->
-				      <!--<button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>-->
-					  <!--<button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>-->
-				  <!--</td>-->
-                <!--</tr>-->
-              </tbody>
-			  <tfoot>
-			     <tr>
-				     <td colspan="6" align="center">
-						<ul class="pagination">
-                            <!--<li class="disabled"><a href="#">上一页</a></li>-->
-                            <!--<li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>-->
-                            <!--<li><a href="#">2</a></li>-->
-                            <!--<li><a href="#">3</a></li>-->
-                            <!--<li><a href="#">4</a></li>-->
-                            <!--<li><a href="#">5</a></li>-->
-                            <!--<li><a href="#">下一页</a></li>-->
-                        </ul>
-					 </td>
-				 </tr>
-
-			  </tfoot>
-            </table>
-          </div>
+				  <div class="table-responsive">
+					  <button type="button" class="btn btn-primary" style="float:left;margin-right:10px;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i>新增</button>
+					  <button type="button" class="btn btn-danger" style="float:left;"><i class=" glyphicon glyphicon-remove">删除</i></button>
+					  <table id="tb_users"></table>
+				  </div>
 			  </div>
 			</div>
         </div>
       </div>
     </div>
 
-    <script src="../jquery/jquery-2.1.1.min.js"></script>
     <script src="../bootstrap/js/bootstrap.min.js"></script>
 	<script src="../script/docs.min.js"></script>
+	<script src="js/user.js"></script>
         <script type="text/javascript">
-            $(function () {
-			    $(".list-group-item").click(function(){
-				    if ( $(this).find("ul") ) {
-						$(this).toggleClass("tree-closed");
-						if ( $(this).hasClass("tree-closed") ) {
-							$("ul", this).hide("fast");
-						} else {
-							$("ul", this).show("fast");
-						}
-					}
-				});
-                var tbodyNode = $("tbody");
-                $(tbodyNode).on("click", ".btn-success", function(){
+        	$(function () {
+                //1.初始化Table
+                var oTable = new TableInit();
+                oTable.Init();
+
+                //2.初始化Button的点击事件
+                var oButtonInit = new ButtonInit();
+                oButtonInit.Init();
+
+                $(".list-group-item").click(function(){
+                    if ( $(this).find("ul") ) {
+                        $(this).toggleClass("tree-closed");
+                        if ( $(this).hasClass("tree-closed") ) {
+                            $("ul", this).hide("fast");
+                        } else {
+                            $("ul", this).show("fast");
+                        }
+                    }
+                });
+
+                var tableBody = $("#tb_users");
+
+                $(tableBody).on("click", ".btn-success", function(){
                     window.location.href = "assignRole.html";
                 });
 
-                $(tbodyNode).on("click", ".btn-primary", function(){
+                $(tableBody).on("click", ".btn-primary", function(){
                     window.location.href = "edit.html";
                 });
 
-                var ulNode = $(".pagination");
-                // $(ulNode).on("click", "li:first", function () {
-                //     var activeIndex = parseInt($(this).next(".active").find("a").text());
-                //     var index = activeIndex - 1;
-                //     if(activeIndex === 1){
-                //         index = activeIndex;
-                //     }
-                //
-                //     var hasClass = $(this).hasClass(".disabled");
-                //     console.log(hasClass);
-                //     console.log(typeof hasClass);
-                //     if (!hasClass){
-                //         initList(index, 10);
-                //     } else{
-                //         $(this).unbind("click");
-					// }
-                //
-                // });
-                //
-                // $(ulNode).on("click", "li:last", function () {
-                //
-                //     var activeIndex = parseInt($(this).prev(".active").find("a").text());
-                //     var pageCount = parseInt($(this).prev());
-                //
-                //     var index = activeIndex + 1;
-                //     if(activeIndex === pageCount){
-                //         index = pageCount;
-                //     }
-                //
-                //     var hasClass = $(this).hasClass(".disabled");
-                //     console.log(hasClass);
-                //     console.log(typeof hasClass);
-                //     if (!hasClass){
-                //         // $(this).unbind("click");
-                //         initList(index, 10);
-                //     }
-                //
-                // });
+				$(tableBody).on("click", ".btn-danger", function(){
+                    var account = $(this).parent().parent().find("td").eq(2).text();
+                	deleteUser(account);
+				});
 
-                $(ulNode).on("click", "li[class != 'disabled']", function () {
-                    var pageIndex = $(this).text();
-
-                    var index = parseInt(pageIndex);
-
-                    if(isNaN(index)){
-                        var nextActive = $(this).next(".active").text();
-                        var prevActive = $(this).prev(".active").text();
-                        var nextActiveIndex = parseInt(nextActive);
-                       	var prevActiveIndex = parseInt(prevActive);
-						
-						console.log(nextActive);
-						console.log(prevActive);
-						console.log(nextActiveIndex);
-						console.log(prevActiveIndex);
-						
-
-						// if(!isNaN(nextActiveIndex)){
-                         //    initList(nextActiveIndex - 1, 10);
-						// } else{
-                         //    initList(prevActiveIndex - 1, 10);
-						// }
-
-					} else {
-						initList(index, 10);
-					}
-
-                });
-
-			    init();
+                initData();
             });
 
-            function init(){
+            var TableInit = function () {
+                var oTableInit = new Object();
+                //初始化Table
+                oTableInit.Init = function () {
+                    $('#tb_users').bootstrapTable({
+                        url: '/atcrowdfunding/user/query-page',         //请求后台的URL（*）
+                        method: 'get',                      //请求方式（*）
+                        toolbar: '#toolbar',                //工具按钮用哪个容器
+                        striped: true,                      //是否显示行间隔色
+                        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                        pagination: true,                   //是否显示分页（*）
+                        sortable: false,                     //是否启用排序
+                        sortOrder: "asc",                   //排序方式
+                        queryParams: oTableInit.queryParams,//传递参数（*）
+                        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                        pageNumber:1,                       //初始化加载第一页，默认第一页
+                        pageSize: 10,                       //每页的记录行数（*）
+                        pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                        search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                        strictSearch: true,
+                        showColumns: true,                  //是否显示所有的列
+                        showRefresh: true,                  //是否显示刷新按钮
+                        minimumCountColumns: 2,             //最少允许的列数
+                        clickToSelect: false,                //是否启用点击选中行
+                        height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                        uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                        showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+                        cardView: false,                    //是否显示详细视图
+                        detailView: false,                   //是否显示父子表
+                        columns: [{
+                            checkbox: true
+                        }, {
+                            title: '序号',
+                            align: "center",
+                            width: 40,
+                            formatter: orderNumber
+                        },{
+                            field: 'account',
+                            title: '账号'
+                        }, {
+                            field: 'username',
+                            title: '名称'
+                        }, {
+                            field: 'email',
+                            title: '邮箱地址'
+                        }, {
+                            field: 'Desc',
+                            title: '操作',
+                            width: '120px',
+                            align: "center",
+							formatter: operate
+                        }]
+                    });
+                };
 
-                initUserInfo();
-                initList(1, 10);
+                //得到查询的参数
+                oTableInit.queryParams = function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        limit: params.limit,   //页面大小
+                        offset: params.offset,  //页码
+						query:$("div[class = 'pull-right search']").find("input").val()
+                    };
+                    return temp;
+                };
+                return oTableInit;
+            };
 
-			}
 
-			function initList(pageNumber, pageSize){
-                clearData();
+            var ButtonInit = function () {
+                var oInit = new Object();
+                var postdata = {};
 
-                $.ajax({
-                    url: "/atcrowdfunding/user/query-page",
-                    type: "post",
-                    data: {pageNumber: pageNumber, pageSize: pageSize},
-                    success: function (data) {
-                        var users = data.data.page.data;
+                oInit.Init = function () {
+                    //初始化页面上面的按钮事件
+                };
 
-                        var td = "<td></td>";
-                        var tr = "<tr></tr>";
-                        var button = "<button type='button'></button>";
-						var input = "<input type='checkbox'>";
-						var iStr = "<i></i>";
-
-                        for (var i = 0; i < users.length; i++) {
-                            var trNode = $(tr);
-                            var checkBoxNode = $(td).append(input);
-
-                            $(trNode).append($(td).text(i + 1));
-                            $(trNode).append($(checkBoxNode));
-                            $(trNode).append($(td).text(users[i].account));
-                            $(trNode).append($(td).text(users[i].username));
-                            $(trNode).append($(td).text(users[i].email));
-
-                            var roleBtn = $(button).addClass("btn btn-success btn-xs").append($(iStr).addClass(" glyphicon glyphicon-check"));
-                            var editBtn = $(button).addClass("btn btn-primary btn-xs").append($(iStr)).addClass(" glyphicon glyphicon-pencil");
-                            var removeBtn = $(button).addClass("btn btn-danger btn-xs").append($(iStr)).addClass(" glyphicon glyphicon-remove");
-
-                            var btnTdNode = $(td);
-                            $(btnTdNode).append($(roleBtn));
-                            $(btnTdNode).append($(editBtn));
-                            $(btnTdNode).append($(removeBtn));
-                            $(trNode).append($(btnTdNode));
-
-                            $(trNode).appendTo($("tbody"));
-                        }
-
-                        var pageCount = data.data.page.pageCount;
-
-                        var a = "<a href='javascript:void(0);'></a>";
-                        var li = "<li></li>";
-                        var span = "<span></span>";
-
-                        var prevLiNode = $(li).append($(a).text("上一页"));
-                        var nextLiNode = $(li).append($(a).text("下一页"));
-
-                        pageNumber = parseInt(pageNumber);
-                        pageCount = parseInt(pageCount);
-                        if(pageNumber === 1){
-                            $(prevLiNode).addClass("disabled");
-                        }
-
-                        if(pageNumber === pageCount){
-                            $(nextLiNode).addClass("disabled");
-                        }
-
-                        var paginationNode = $(".pagination");
-                        $(prevLiNode).appendTo($(paginationNode));
-                        for (var j = 0; j< pageCount; j++){
-                            var index = j + 1;
-                            var aNode = $(a);
-							var liNode = $(li).append($(aNode).text(index));
-                            if(index === pageNumber){
-                            	$(liNode).addClass("active");
-                            	$(span).addClass("sr-only").text("(current)").appendTo($(aNode));
-                            }
-
-                            $(liNode).appendTo($(paginationNode));
-                        }
-
-                        $(nextLiNode).appendTo($(paginationNode));
-                    }
-                });
-			}
-
-            //初始化右上角登录名
-            function initUserInfo() {
-                $.ajax({
-                    url: "/atcrowdfunding/user/info",
-                    type: "post",
-                    data: {},
-                    success: function (data) {
-                        if (data.statusCode === 0) {
-                            layer.msg("系统错误，请稍后再试!", {time: 1500, icon: 5, shift: 6});
-                        }
-
-                        if (data.statusCode === 1) {
-
-                            $("button:first span:first").text(data.data.username);
-                        }
-                    }
-                });
-            }
-
-            function clearData(){
-                $("tbody").empty();
-                $(".pagination").empty();
-            }
+                return oInit;
+            };
         </script>
   </body>
 </html>
