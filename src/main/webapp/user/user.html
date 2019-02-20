@@ -148,7 +148,10 @@
 	<script src="../script/docs.min.js"></script>
 	<script src="js/user.js"></script>
         <script type="text/javascript">
-        	$(function () {
+			var checked_set = new Set();
+
+			$(function () {
+
                 //1.初始化Table
                 var oTable = new TableInit();
                 oTable.Init();
@@ -180,7 +183,11 @@
 
 				$(tableBody).on("click", ".btn-danger", function(){
                     var account = $(this).parent().parent().find("td").eq(2).text();
-                	deleteUser(account);
+                    deleteUser(account);
+				});
+
+				$(".table-responsive button:eq(1)").click(function () {
+                    deleteUser(checked_set);
 				});
 
                 initData();
@@ -192,12 +199,13 @@
                 oTableInit.Init = function () {
                     $('#tb_users').bootstrapTable({
                         url: '/atcrowdfunding/user/query-page',         //请求后台的URL（*）
-                        method: 'get',                      //请求方式（*）
+                        method: 'post',                      //请求方式（*）
+                        contentType:"application/x-www-form-urlencoded", //post 必加，不然报错
                         toolbar: '#toolbar',                //工具按钮用哪个容器
                         striped: true,                      //是否显示行间隔色
                         cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
                         pagination: true,                   //是否显示分页（*）
-                        sortable: false,                     //是否启用排序
+                        sortable: false,                    //是否启用排序
                         sortOrder: "asc",                   //排序方式
                         queryParams: oTableInit.queryParams,//传递参数（*）
                         sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
@@ -209,14 +217,50 @@
                         showColumns: true,                  //是否显示所有的列
                         showRefresh: true,                  //是否显示刷新按钮
                         minimumCountColumns: 2,             //最少允许的列数
-                        clickToSelect: false,                //是否启用点击选中行
+                        clickToSelect: false,               //是否启用点击选中行
                         height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
                         uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
                         showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
                         cardView: false,                    //是否显示详细视图
-                        detailView: false,                   //是否显示父子表
+                        detailView: false,                  //是否显示父子表
+                        onCheck: function(row){             //点击每一个单选框时触发的操作
+                            checked_set.add(row.account);
+                        },
+						onUncheck: function(row){
+                            checked_set.delete(row.account);//取消每一个单选框时对应的操作；
+                        },
+                        onCheckAll: function(rows){         //点击全选框时触发的操作
+
+                            var array = rows.map(function (e) {
+                                return e.account;
+                            });
+
+                            array.forEach(function (f) {
+                            	checked_set.add(f);
+                            });
+                        },
+                        onUncheckAll: function(rows){		//点击全选框时触发的操作
+                            var array = rows.map(function (e) {
+								return e.account;
+                            });
+
+                            array.forEach(function (f) {
+								checked_set.delete(f);
+                            })
+						},
                         columns: [{
-                            checkbox: true
+                            checkbox: true,
+                            align: "center",
+                            width: '48px',
+                            formatter: function(value, row){
+                                //判断当前账号是否在js数组里，在则选中，不在则不选中
+								if(checked_set.has(row.account)) {
+                                    return {
+                                        checked: true
+                                    }
+                                }
+
+                            }
                         }, {
                             title: '序号',
                             align: "center",

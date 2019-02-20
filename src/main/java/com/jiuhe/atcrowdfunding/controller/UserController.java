@@ -4,15 +4,18 @@ import com.jiuhe.atcrowdfunding.bean.BaseResponse;
 import com.jiuhe.atcrowdfunding.bean.Page;
 import com.jiuhe.atcrowdfunding.domain.User;
 import com.jiuhe.atcrowdfunding.service.UserService;
+import com.jiuhe.atcrowdfunding.util.CollectionUtil;
 import com.jiuhe.atcrowdfunding.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
@@ -23,13 +26,13 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public BaseResponse deleteUser(@RequestParam("account") String account) {
+    public BaseResponse deleteUser(@RequestParam("accounts") Set<String> accounts) {
 
-        if (StringUtil.isEmpty(account)) {
+        if (CollectionUtil.isEmpty(accounts)) {
             return BaseResponse.newErrorResponse();
         }
 
-        userService.removeUser(account);
+        userService.removeUser(accounts);
 
         return BaseResponse.newSuccessResponse();
     }

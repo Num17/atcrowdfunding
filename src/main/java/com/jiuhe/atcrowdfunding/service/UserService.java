@@ -3,6 +3,7 @@ package com.jiuhe.atcrowdfunding.service;
 import com.jiuhe.atcrowdfunding.bean.Page;
 import com.jiuhe.atcrowdfunding.domain.User;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface UserService {
@@ -15,7 +16,7 @@ public interface UserService {
 
     int getCount(int pageSize);
 
-    int removeUser(String account);
+    int removeUser(Collection<String> accounts);
 
 //    String getUserInfo(String username);
 }

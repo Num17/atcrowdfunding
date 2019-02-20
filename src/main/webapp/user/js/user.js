@@ -1,21 +1,3 @@
-function deleteUser(account){
-    $.ajax({
-        url: "/atcrowdfunding/user/delete",
-        type: "post",
-        data: {account: account},
-        success: function (data) {
-            if (data.statusCode === 0) {
-                layer.msg("系统错误，请稍后再试!", {time: 1500, icon: 5, shift: 6});
-            }
-
-            if (data.statusCode === 1) {
-                $("#tb_users").bootstrapTable("refresh", {
-                    silent: true //静态刷新
-                });
-            }
-        }
-    });
-}
 function orderNumber(value, row, index) {
     //获取每页显示的数量
     var pageSize = $('#tb_users').bootstrapTable('getOptions').pageSize;
@@ -35,13 +17,13 @@ function operate() {
 
 function initData(){
 
-    initUserInfo();
+    init_user_info();
     // initList(1, 10);
 
 }
 
 //初始化右上角登录名
-function initUserInfo() {
+function init_user_info() {
     $.ajax({
         url: "/atcrowdfunding/user/info",
         type: "post",
@@ -54,6 +36,26 @@ function initUserInfo() {
             if (data.statusCode === 1) {
 
                 $("button:first span:first").text(data.data.username);
+            }
+        }
+    });
+}
+
+function deleteUser(accounts){
+    $.ajax({
+        url: "/atcrowdfunding/user/delete",
+        type: "post",
+        data: {accounts: JSON.stringify(accounts)},
+        contentType: "application/json",
+        success: function (data) {
+            if (data.statusCode === 0) {
+                layer.msg("系统错误，请稍后再试!", {time: 1500, icon: 5, shift: 6});
+            }
+
+            if (data.statusCode === 1) {
+                $("#tb_users").bootstrapTable("refresh", {
+                    silent: true //静态刷新
+                });
             }
         }
     });

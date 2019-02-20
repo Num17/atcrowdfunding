@@ -4,10 +4,13 @@ import com.jiuhe.atcrowdfunding.bean.Page;
 import com.jiuhe.atcrowdfunding.dao.UserMapper;
 import com.jiuhe.atcrowdfunding.domain.User;
 import com.jiuhe.atcrowdfunding.service.UserService;
+import com.jiuhe.atcrowdfunding.util.CollectionUtil;
+import com.jiuhe.atcrowdfunding.util.DoubleUtil;
 import com.jiuhe.atcrowdfunding.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -16,8 +19,12 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public int removeUser(String account) {
-        return userMapper.deleteUser(account);
+    public int removeUser(Collection<String> accounts) {
+        if (CollectionUtil.isEmpty(accounts)) {
+            return DoubleUtil._ZEOR;
+        }
+
+        return userMapper.deleteUser(accounts);
     }
 
     @Override
@@ -29,12 +36,6 @@ public class UserServiceImpl implements UserService {
     public int login(String username, String password) {
         return userMapper.querByUserNameAndPassword(username, password);
     }
-
-//    @Override
-//    public String getUserInfo(String username) {
-//        return userMapper;
-//    }
-
 
     @Override
     public Page<User> getPage(Integer offset, Integer limit, String query) {

@@ -2,7 +2,9 @@ package com.jiuhe.atcrowdfunding.dao;
 
 import com.jiuhe.atcrowdfunding.domain.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 @Mapper
@@ -17,6 +19,6 @@ public interface UserMapper {
 
     int queryCount();
 
-    int deleteUser(String account);
+    int deleteUser(Collection<String> accounts);
 
 }
