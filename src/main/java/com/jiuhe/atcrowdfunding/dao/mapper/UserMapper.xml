@@ -33,7 +33,7 @@
           account
         in
           <foreach collection="accounts" item="item" open="(" close=")" separator=",">
-            #{item.account,jdbcType=VARCHAR}
+            #{item,jdbcType=VARCHAR}
           </foreach>
     </delete>
 

@@ -183,14 +183,15 @@
 
 				$(tableBody).on("click", ".btn-danger", function(){
                     var account = $(this).parent().parent().find("td").eq(2).text();
-                    deleteUser(account);
+                    delete_user(account);
 				});
 
 				$(".table-responsive button:eq(1)").click(function () {
-                    deleteUser(checked_set);
+                    var account_array = Array.from(checked_set);
+                    delete_user(account_array);
 				});
 
-                initData();
+                init_data();
             });
 
             var TableInit = function () {
@@ -265,7 +266,7 @@
                             title: '–Ú∫≈',
                             align: "center",
                             width: 40,
-                            formatter: orderNumber
+                            formatter: order_number
                         },{
                             field: 'account',
                             title: '’À∫≈'

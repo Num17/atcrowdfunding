@@ -19,6 +19,6 @@ public interface UserMapper {
 
     int queryCount();
 
-    int deleteUser(Collection<String> accounts);
+    int deleteUser(@Param("accounts") Collection<String> accounts);
 
 }

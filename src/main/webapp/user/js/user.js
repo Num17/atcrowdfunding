@@ -1,4 +1,4 @@
-function orderNumber(value, row, index) {
+function order_number(value, row, index) {
     //获取每页显示的数量
     var pageSize = $('#tb_users').bootstrapTable('getOptions').pageSize;
     //获取当前是第几页
@@ -12,10 +12,10 @@ function operate() {
     var roleStr = "<button type='button' class='btn btn-success btn-xs'><i class=' glyphicon glyphicon-check'></i></button>";
     var editStr = "<button type='button' class='btn btn-primary btn-xs'><i class=' glyphicon glyphicon-pencil'></i></button>";
     var removeStr = "<button type='button' class='btn btn-danger btn-xs'><i class=' glyphicon glyphicon-remove'></i></button>";
-    return roleStr+ editStr + removeStr;
+    return roleStr + editStr + removeStr;
 }
 
-function initData(){
+function init_data() {
 
     init_user_info();
     // initList(1, 10);
@@ -41,12 +41,13 @@ function init_user_info() {
     });
 }
 
-function deleteUser(accounts){
+function delete_user(account_array) {
+
     $.ajax({
         url: "/atcrowdfunding/user/delete",
         type: "post",
-        data: {accounts: JSON.stringify(accounts)},
-        contentType: "application/json",
+        data: {"accounts": account_array},
+        traditional: true, //当传递js数组时，防止jQuery的深度序列化参数对象
         success: function (data) {
             if (data.statusCode === 0) {
                 layer.msg("系统错误，请稍后再试!", {time: 1500, icon: 5, shift: 6});
