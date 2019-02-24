@@ -21,21 +21,75 @@ import java.util.Set;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+//TODO 异常,日志
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private UserService userService;
 
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    public BaseResponse updateUser(
+            @RequestParam("account") String account,
+            @RequestParam("name") String name,
+            @RequestParam("email") String email) {
+
+        userService.updateUser(account, name, email);
+
+        return BaseResponse.SUCCESS_RESPONSE;
+
+    }
+
+    @RequestMapping(value = "get", method = RequestMethod.POST)
+    public BaseResponse getUser(@RequestParam("account") String account) {
+
+        User user = userService.getUserByAccount(account);
+        return BaseResponse.SUCCESS_RESPONSE.put("user", user);
+    }
+
+    @RequestMapping("/check-account")
+    public BaseResponse checkAccount(@RequestParam("account") String account) {
+
+        boolean flag = userService.checkAccount(account);
+        if (!flag) {
+            return BaseResponse.ERROR_RESPONSE;
+        }
+
+        return BaseResponse.SUCCESS_RESPONSE;
+    }
+
+    @RequestMapping("/add")
+    public BaseResponse addUser(
+            @RequestParam("account") String account,
+            @RequestParam("name") String name,
+            @RequestParam("email") String email) {
+
+        if (StringUtil.isEmpty(account)) {
+            return BaseResponse.newErrorResponse("请输入账号!");
+        }
+
+        if (!userService.checkAccount(account)) {
+            logger.warn("账号重复无法新增该用户,账号:[{}]", account);
+            return BaseResponse.newErrorResponse("账号重复无法新增该用户!");
+        }
+
+        if (StringUtil.isEmpty(name)) {
+            return BaseResponse.newErrorResponse("请输入姓名!");
+        }
+
+        userService.addUser(account, name, email);
+        return BaseResponse.SUCCESS_RESPONSE;
+    }
+
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public BaseResponse deleteUser(@RequestParam("accounts") List<String> accounts) {
 
         if (CollectionUtil.isEmpty(accounts)) {
-            return BaseResponse.newErrorResponse();
+            return BaseResponse.ERROR_RESPONSE;
         }
 
         userService.removeUser(accounts);
 
-        return BaseResponse.newSuccessResponse();
+        return BaseResponse.SUCCESS_RESPONSE;
     }
 
     @RequestMapping("/query-page")
@@ -59,7 +113,7 @@ public class UserController {
     public BaseResponse logout(HttpSession session) {
         logger.info("用户[{}]退出成功!", session.getAttribute("username"));
         session.invalidate();
-        return BaseResponse.newSuccessResponse();
+        return BaseResponse.SUCCESS_RESPONSE;
     }
 
     @RequestMapping("/login")
@@ -71,20 +125,20 @@ public class UserController {
 
         int count = userService.login(username, password);
         if (count == 0) {
-            return BaseResponse.newErrorResponse();
+            return BaseResponse.ERROR_RESPONSE;
         }
 
         session.setAttribute("username", username);
 
         logger.info("账号[{}]登录成功!", username);
-        return BaseResponse.newSuccessResponse();
+        return BaseResponse.SUCCESS_RESPONSE;
 
     }
 
     @RequestMapping("/info")
     public BaseResponse getUserInfo(HttpSession session) {
 
-        return BaseResponse.newSuccessResponse().put("username", session.getAttribute("username"));
+        return BaseResponse.SUCCESS_RESPONSE.put("username", session.getAttribute("username"));
     }
 
     @Autowired

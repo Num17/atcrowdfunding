@@ -18,5 +18,13 @@ public interface UserService {
 
     int removeUser(Collection<String> accounts);
 
+    boolean checkAccount(String account);
+
+    int addUser(String account, String name, String email);
+
+    User getUserByAccount(String account);
+
+    int updateUser(String account, String name, String email);
+
 //    String getUserInfo(String username);
 }

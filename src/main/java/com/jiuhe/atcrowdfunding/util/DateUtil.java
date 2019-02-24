@@ -8,6 +8,7 @@ import java.util.Date;
 public class DateUtil {
 
     public static final Date EMPTY = null;
+    public static final Date NOW = new Date();
 
     public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
     public static final String DEFAULT_TIME_PATTERN = "HH:mm:ss";

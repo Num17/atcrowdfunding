@@ -21,4 +21,11 @@ public interface UserMapper {
 
     int deleteUser(@Param("accounts") Collection<String> accounts);
 
+    User queryCountByAccount(String account);
+
+    int insertUser(User user);
+
+    User queryUserByAccount(String account);
+
+    int updateUser(String account, String name, String email);
 }

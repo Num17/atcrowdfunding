@@ -24,6 +24,61 @@
     <sql id="Base_Table">
         t_user
     </sql>
+
+    <update id="updateUser">
+        update
+          <include refid="Base_Table"/>
+        set
+          account = #{account,jdbcType=VARCHAR},
+          username = #{name,jdbcType=VARCHAR},
+          email = #{email,jdbcType=VARCHAR}
+        where
+          account = #{account,jdbcType=VARCHAR}
+    </update>
+
+    <select id="queryUserByAccount" resultMap="BaseResultMap">
+        select
+          account,
+          username,
+          email
+        from
+          <include refid="Base_Table"/>
+        where
+          account = #{account,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertUser" parameterType="com.jiuhe.atcrowdfunding.domain.User">
+        insert
+        into
+        <include refid="Base_Table"/>
+          (
+            account,
+            username,
+            password,
+            email,
+            is_deleted,
+            create_time
+          )
+        values
+            (
+              account = #{account,jdbcType=VARCHAR},
+              username = #{username,jdbcType=VARCHAR},
+              password = #{password,jdbcType=VARCHAR},
+              email = #{email,jdbcType=VARCHAR},
+              is_deleted = #{isDeleted,jdbcType=BOOLEAN},
+              create_time = #{createTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+
+    <select id="queryCountByAccount" parameterType="string" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table"/>
+        where
+          account = #{account,jdbcType=VARCHAR}
+    </select>
+
     <delete id="deleteUser" parameterType="collection">
         update
           <include refid="Base_Table"/>
@@ -32,9 +87,9 @@
         where
           account
         in
-          <foreach collection="accounts" item="item" open="(" close=")" separator=",">
+        <foreach collection="accounts" item="item" open="(" close=")" separator=",">
             #{item,jdbcType=VARCHAR}
-          </foreach>
+        </foreach>
     </delete>
 
     <select id="queryCount" resultType="int">
@@ -48,11 +103,11 @@
 
     <select id="queryPage" resultMap="BaseResultMap">
         select
-          account,
-          username,
-          email
+            account,
+            username,
+            email
         from
-          <include refid="Base_Table"/>
+        <include refid="Base_Table"/>
         where
           is_deleted = 0
         <if test="query != null and query.length() != 0">
@@ -66,28 +121,27 @@
         order by
           id
         desc
-        limit
-          #{offset,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+          limit #{offset,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
     </select>
 
     <select id="queryById" parameterType="int" resultMap="BaseResultMap">
-      select
-        <include refid="Base_Column_List"/>
-      from
-        <include refid="Base_Table"/>
-      where
-        id = #{id,jdbcType=INTEGER}
+        select
+          <include refid="Base_Column_List"/>
+        from
+          <include refid="Base_Table"/>
+        where
+          id = #{id,jdbcType=INTEGER}
     </select>
 
     <select id="querByUserNameAndPassword" resultType="int">
-      select
-        count(id)
-      from
-        <include refid="Base_Table"/>
-      where
-        username = #{username,jdbcType=VARCHAR}
-      and
-        password = #{password,jdbcType=VARCHAR}
+        select
+          count(id)
+        from
+          <include refid="Base_Table"/>
+        where
+          username = #{username,jdbcType=VARCHAR}
+        and
+          password = #{password,jdbcType=VARCHAR}
     </select>
 
 </mapper>

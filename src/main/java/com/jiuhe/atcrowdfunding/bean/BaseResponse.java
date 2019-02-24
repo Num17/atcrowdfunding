@@ -8,10 +8,15 @@ import java.util.Map;
  */
 public class BaseResponse {
 
-    //处理失败
+    //失败状态码
     private static final Integer ERROR_STATUS_CODE = 0;
-    //处理成功
+    //成功状态码
     private static final Integer SUCCESS_STATUS_CODE = 1;
+
+    //处理失败
+    public static final BaseResponse ERROR_RESPONSE = new BaseResponse(ERROR_STATUS_CODE);
+    //处理成功
+    public static final BaseResponse SUCCESS_RESPONSE = new BaseResponse(SUCCESS_STATUS_CODE);
 
 
     //状态码
@@ -35,14 +40,6 @@ public class BaseResponse {
         this.message = message;
     }
 
-    public static BaseResponse newErrorResponse() {
-        return new BaseResponse(ERROR_STATUS_CODE);
-    }
-
-    public static BaseResponse newSuccessResponse() {
-        return new BaseResponse(SUCCESS_STATUS_CODE);
-    }
-
     public static BaseResponse newErrorResponse(String message) {
         return new BaseResponse(ERROR_STATUS_CODE, message);
     }
@@ -60,25 +57,13 @@ public class BaseResponse {
         return statusCode;
     }
 
-//    public void setStatusCode(Integer statusCode) {
-//        this.statusCode = statusCode;
-//    }
-
-
     public String getMessage() {
         return message;
     }
-
-//    public void setMessage(String message) {
-//        this.message = message;
-//    }
 
     public Map<String, Object> getData() {
         return data;
     }
 
-//    public void setData(Map<String, Object> data) {
-//        this.data = data;
-//    }
 
 }

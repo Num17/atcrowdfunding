@@ -2,6 +2,13 @@ server:
   servlet:
     context-path: /atcrowdfunding
   port: 80
+#中文乱码
+#spring:
+#    http:
+#        encoding:
+#            force: true
+#            charset: GB2312
+#            enabled: true
 
 #库配置
 database:
